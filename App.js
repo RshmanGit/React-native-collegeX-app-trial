@@ -19,23 +19,23 @@ import LoginScreen from './screens/LoginScreen';
 // Make sure to maintain the name "splash". If it is to be changed, do not use capital letter/s. And change it in required android folders.
 const Tab = createMaterialBottomTabNavigator();
 
-function MyTabs() {
+function MyTabs({ authKey, id }) {
   return (
     <Tab.Navigator initialRouteName="Home" activeColor="#fff">
       <Tab.Screen
         name="Home"
-        component={HomeScreen}
+        component={() => <HomeScreen authKey={authKey} id={id} />}
         options={{
           tabBarLabel: 'Home',
           tabBarIcon: ({ color, size }) => (
             <Icon name="home" size={25} color="white" />
             // <IconRn name="home" />
           ),
-        }}
-      />
+        }} >
+      </Tab.Screen>
       <Tab.Screen
         name="Opted"
-        component={OptedScreen}
+        component={() => <OptedScreen id={id} authKey={authKey} />}
         options={{
           tabBarLabel: 'Opted',
           tabBarIcon: ({ color, size }) => (
@@ -45,7 +45,7 @@ function MyTabs() {
       />
       <Tab.Screen
         name="ChatBot"
-        component={ChatBotScreen}
+        component={() => <ChatBotScreen authKey={authKey} id={id} />}
         options={{
           tabBarLabel: 'Chatbot',
           tabBarIcon: ({ color, size }) => (
@@ -56,7 +56,7 @@ function MyTabs() {
 
       <Tab.Screen
         name="Profile"
-        component={ProfileScreen}
+        component={() => <ProfileScreen authKey={authKey} id={id} />}
         options={{
           tabBarLabel: 'Profile',
           tabBarIcon: ({ color, size }) => (
@@ -66,7 +66,7 @@ function MyTabs() {
       />
       <Tab.Screen
         name="Settings"
-        component={SettingsScreen}
+        component={() => <SettingsScreen authKey={authKey} id={id} />}
         options={{
           tabBarLabel: 'Setting',
           tabBarIcon: ({ color, size }) => (
@@ -74,13 +74,15 @@ function MyTabs() {
           ),
         }}
       />
-    </Tab.Navigator>
+    </Tab.Navigator >
   );
 }
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [hasAccount, setHasAccount] = useState(true);
+  const [id, setId] = useState(1);
+  const [authKey, setAuthKey] = useState('a6398e1b-eaee-4af5-8b08-be5d4b75ad79');
 
   useEffect(() => {
     // SplashScreen.hide();
@@ -93,10 +95,13 @@ const App = () => {
           <LoginScreen
             setIsLoggedIn={setIsLoggedIn}
             setHasAccount={setHasAccount}
+            // signInStudent={signInStudent}
+            setId={setId}
+            setAuthKey={setAuthKey}
           />
         )}
         {!hasAccount && <SignUpScreen setHasAccount={setHasAccount} />}
-        {isLoggedIn && hasAccount && <MyTabs />}
+        {isLoggedIn && hasAccount && <MyTabs id={id} authKey={authKey} />}
       </NavigationContainer>
     </NativeBaseProvider>
   );

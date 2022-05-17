@@ -10,9 +10,10 @@ import {
   VStack,
 } from 'native-base';
 import React from 'react';
-import {Text} from 'react-native';
-import {Formik} from 'formik';
+import { Text } from 'react-native';
+import { Formik } from 'formik';
 import * as yup from 'yup';
+import constants from '../constants';
 
 function signUpStudent(values) {
   var myHeaders = new Headers();
@@ -38,15 +39,16 @@ function signUpStudent(values) {
   };
 
   fetch(
-    'https://c6a0-2405-201-200a-3110-14c3-8def-f4a3-790c.in.ngrok.io/student/signup/',
+    `${constants.BACKEND_URL}/student/signup/`,
     requestOptions,
   )
     .then(res => res.json())
     .then(res => console.log(res))
     .catch(err => console.log(err));
+
 }
 
-const SignUpScreen = ({setHasAccount}) => {
+const SignUpScreen = ({ setHasAccount }) => {
   const handleSubmit = values => {
     setHasAccount(true);
     signUpStudent(values);
@@ -69,7 +71,7 @@ const SignUpScreen = ({setHasAccount}) => {
           .max(14, 'Password should not excced 14 chars.')
           .required(),
       })}>
-      {({values, handleChange, errors, setFieldTouched, touched, isValid}) => (
+      {({ values, handleChange, errors, setFieldTouched, touched, isValid }) => (
         <Box bgColor={'#009be5'} py={'35%'}>
           <Center w="100%">
             <Box safeArea p="2" w="90%" maxW="290" py="8">
@@ -96,7 +98,7 @@ const SignUpScreen = ({setHasAccount}) => {
                 <FormControl color="white">
                   <FormControl.Label color="white">
                     {' '}
-                    <Text style={{color: 'white'}}>First Name</Text>
+                    <Text style={{ color: 'white' }}>First Name</Text>
                   </FormControl.Label>
                   <Input
                     bgColor={'white'}
@@ -107,7 +109,7 @@ const SignUpScreen = ({setHasAccount}) => {
                     onBlur={() => setFieldTouched('firstName')}
                   />
                   {touched.firstName && errors.firstName && (
-                    <Text style={{fontSize: 12, color: '#FFf'}}>
+                    <Text style={{ fontSize: 12, color: '#FFf' }}>
                       {errors.firstName}
                     </Text>
                   )}
@@ -116,7 +118,7 @@ const SignUpScreen = ({setHasAccount}) => {
                 <FormControl color="white">
                   <FormControl.Label color="white">
                     {' '}
-                    <Text style={{color: 'white'}}>Last Name</Text>
+                    <Text style={{ color: 'white' }}>Last Name</Text>
                   </FormControl.Label>
                   <Input
                     bgColor={'white'}
@@ -127,7 +129,7 @@ const SignUpScreen = ({setHasAccount}) => {
                     onBlur={() => setFieldTouched('lastName')}
                   />
                   {touched.lastName && errors.lastName && (
-                    <Text style={{fontSize: 12, color: '#FFf'}}>
+                    <Text style={{ fontSize: 12, color: '#FFf' }}>
                       {errors.lastName}
                     </Text>
                   )}
@@ -136,7 +138,7 @@ const SignUpScreen = ({setHasAccount}) => {
                 <FormControl color="white">
                   <FormControl.Label>
                     {' '}
-                    <Text style={{color: 'white'}}>Email</Text>
+                    <Text style={{ color: 'white' }}>Email</Text>
                   </FormControl.Label>
                   <Input
                     bgColor={'white'}
@@ -147,14 +149,14 @@ const SignUpScreen = ({setHasAccount}) => {
                     onBlur={() => setFieldTouched('email')}
                   />
                   {touched.email && errors.email && (
-                    <Text style={{fontSize: 12, color: '#FFf'}}>
+                    <Text style={{ fontSize: 12, color: '#FFf' }}>
                       {errors.email}
                     </Text>
                   )}
                 </FormControl>
                 <FormControl>
                   <FormControl.Label>
-                    <Text style={{color: 'white'}}>Password</Text>
+                    <Text style={{ color: 'white' }}>Password</Text>
                   </FormControl.Label>
                   <Input
                     type="password"
@@ -167,7 +169,7 @@ const SignUpScreen = ({setHasAccount}) => {
                     secureTextEntry={true}
                   />
                   {touched.password && errors.password && (
-                    <Text style={{fontSize: 12, color: '#FFf'}}>
+                    <Text style={{ fontSize: 12, color: '#FFf' }}>
                       {errors.password}
                     </Text>
                   )}
@@ -177,7 +179,7 @@ const SignUpScreen = ({setHasAccount}) => {
                   bg="white"
                   type="submit"
                   onPress={() => handleSubmit(values)}>
-                  <Text style={{color: '#009be5'}}>Sign up</Text>
+                  <Text style={{ color: '#009be5' }}>Sign up</Text>
                 </Button>
               </VStack>
             </Box>
