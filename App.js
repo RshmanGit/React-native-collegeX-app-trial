@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import HomeScreen from './screens/HomeScreen';
 import OptedScreen from './screens/OptedScreen';
 import ChatBotScreen from './screens/ChatBotScreen';
-import ProfileScreen from './screens/ProfileScreen';
+import ProfileScreen from './screens/ProfileScreen/StackNavigator';
 import SettingsScreen from './screens/SettingsScreen';
 // import SplashScreen from 'react-native-splash-screen';
 import { useEffect, useState } from 'react';
@@ -21,7 +21,7 @@ const Tab = createMaterialBottomTabNavigator();
 
 function MyTabs({ authKey, id }) {
   return (
-    <Tab.Navigator initialRouteName="Home" activeColor="#fff">
+    <Tab.Navigator initialRouteName="Profile" activeColor="#fff">
       <Tab.Screen
         name="Home"
         component={() => <HomeScreen authKey={authKey} id={id} />}
