@@ -14,13 +14,13 @@ const ListFromOptions = ({ title, list, color }) => {
         <Flex gap={2}>
           {list.map((univ, i) => (
             <TouchableOpacity
+              key={i}
               onPress={() => console.log('heyy! you pressed the button')}>
               <Flex
                 gap={4}
                 alignItems="center"
                 justifyContent="start"
                 borderRadius="md"
-                key={i}
                 direction="row">
                 <Avatar source={{ uri: univ.avatar }}>U</Avatar>
                 <Box bg={color} flex={1} borderRadius="lg" p={4}>
