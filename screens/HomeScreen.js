@@ -1,7 +1,5 @@
-/* eslint-disable react-native/no-inline-styles */
-//import liraries
 import React, { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { Box, Text, Flex, Select, Center, HStack, ScrollView, VStack } from 'native-base'
 import { Calendar } from 'react-native-calendars';
 import constants from '../constants';
@@ -67,7 +65,6 @@ export default function HomeScreen({ id, authKey }) {
           const month = new Date(keyDate.endDate).getMonth().toString().padStart(2, '0');
           const year = new Date(keyDate.endDate).getFullYear().toString().padStart(4, '0');
           const str = `${year}-${month}-${date}`;
-          console.log(response.data, keyDate, str)
 
           if (!Array.isArray(acc[str])) {
             acc[str] = []
@@ -94,7 +91,7 @@ export default function HomeScreen({ id, authKey }) {
         // }, {})
 
         setKeyDates(data)
-        setMarkedDates(marked)
+        setMarkedDates(markedDates)
       })
       .catch(console.error)
   }, [])
@@ -122,17 +119,20 @@ export default function HomeScreen({ id, authKey }) {
               <ScrollView>
                 <VStack space={3} px={2} py={3}>
                   {Object.entries(keyDates).map(([name, keyDate]) => {
-                    console.log(activeDate, name, keyDate)
 
                     if (activeDate === name)
                       return (
                         keyDate.map((kd, i) => (
-                          <Box textAlign={'start'} borderRadius={'lg'} p={3} backgroundColor='gray.200' key={i} >
-                            {kd.title}
-                            <Text>
-                              {kd.description}
-                            </Text>
-                          </Box>
+                          <TouchableOpacity >
+                            <Box textAlign={'start'} borderRadius={'lg'} p={4} backgroundColor='gray.200' key={i} >
+                              <Text fontSize='lg' fontWeight='bold'>
+                                {kd.title}
+                              </Text>
+                              <Text>
+                                {kd.description}
+                              </Text>
+                            </Box>
+                          </TouchableOpacity>
                         ))
                       )
 
