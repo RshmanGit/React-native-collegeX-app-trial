@@ -64,7 +64,7 @@ function MyTabs({ authKey, id }) {
           ),
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Settings"
         component={() => <SettingsScreen authKey={authKey} id={id} />}
         options={{
@@ -73,7 +73,7 @@ function MyTabs({ authKey, id }) {
             <Icon name="tools" size={25} color="white" />
           ),
         }}
-      />
+      /> */}
     </Tab.Navigator >
   );
 }
