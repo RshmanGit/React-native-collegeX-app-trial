@@ -21,7 +21,7 @@ const Tab = createMaterialBottomTabNavigator();
 
 function MyTabs({ authKey, id }) {
   return (
-    <Tab.Navigator initialRouteName="Profile" activeColor="#fff">
+    <Tab.Navigator initialRouteName="ChatBot" activeColor="#fff">
       <Tab.Screen
         name="Home"
         component={() => <HomeScreen authKey={authKey} id={id} />}
