@@ -21,7 +21,7 @@ const Tab = createMaterialBottomTabNavigator();
 
 function MyTabs({ authKey, id }) {
   return (
-    <Tab.Navigator initialRouteName="Profile" activeColor="#fff">
+    <Tab.Navigator initialRouteName="Home" activeColor="#fff">
       <Tab.Screen
         name="Home"
         component={() => <HomeScreen authKey={authKey} id={id} />}
@@ -79,10 +79,10 @@ function MyTabs({ authKey, id }) {
 }
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [hasAccount, setHasAccount] = useState(true);
-  const [id, setId] = useState(1);
-  const [authKey, setAuthKey] = useState('a6398e1b-eaee-4af5-8b08-be5d4b75ad79');
+  const [id, setId] = useState(null);
+  const [authKey, setAuthKey] = useState('');
 
   useEffect(() => {
     // SplashScreen.hide();
