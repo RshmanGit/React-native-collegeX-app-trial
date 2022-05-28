@@ -7,7 +7,7 @@ import constants from '../constants';
 const ListFromOptions = ({ title, list, color }) => {
   return (
     <Box m={4}>
-      <Text mt="3" fontWeight="extrabold" fontSize="xl">
+      <Text mt="3" fontWeight="bold" fontSize="xl">
         {title}
       </Text>
       <Box>
@@ -68,7 +68,7 @@ export default function OptedScreen({ id, authKey }) {
   }, []);
 
   return (
-    <Flex flex={1} background={'white'}>
+    <Flex px={5} pt={10} flex={1} background={'white'}>
       <ScrollView>
         <ListFromOptions
           color="red.200"

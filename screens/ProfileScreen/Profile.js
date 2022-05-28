@@ -1,8 +1,10 @@
 import React from 'react';
-import { Avatar, Flex, Text, Box, Icon, Button, VStack, } from 'native-base';
+import { Avatar, Flex, Text, Box, Icon, Button, VStack, useToast} from 'native-base';
 import { FontAwesome } from '@expo/vector-icons';
 
 export default function Profile({ info, navigation }) {
+  const toast = useToast();
+
   return (
     <Flex flex={1} bg='white' p={12}>
       <VStack space={4}>
@@ -22,9 +24,13 @@ export default function Profile({ info, navigation }) {
           <Text>Name: {info.highSchoolName || 'Not specified'}</Text>
           <Text>District: {info.highSchoolDistrict || 'Not specified'}</Text>
         </Box>
-        <Flex direction='row' gap={4}>
-          <Button onPress={() => navigation.navigate('Edit Profile')}>Update Profile</Button>
-          <Button>Do something</Button>
+        <Flex direction='row'>
+          <Button borderRadius={'lg'} mr={4} onPress={() => navigation.navigate('Edit Profile')}>Update Profile</Button>
+          <Button borderRadius={'lg'} colorScheme='gray' onPress={() => toast.show({ render: () => (
+            <Box bg="red.200" p={4} rounded="sm" mb={5}>
+              Currently nothing happens on button press 
+            </Box>
+          )})}>Do something</Button> 
         </Flex>
       </VStack>
     </Flex>
