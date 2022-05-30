@@ -1,5 +1,5 @@
 import React from 'react';
-import {useFormik} from 'formik';
+import { useFormik } from 'formik';
 import {
   Flex,
   useToast,
@@ -8,12 +8,11 @@ import {
   Stack,
   FormControl,
   Input,
-  Spacer,
 } from 'native-base';
 
 import constants from '../../constants';
 
-export default function EditProfile({id, authKey, info, navigation}) {
+export default function EditProfile({ id, authKey, info, setInfo, navigation }) {
   const toast = useToast();
   const formik = useFormik({
     initialValues: {
@@ -26,16 +25,23 @@ export default function EditProfile({id, authKey, info, navigation}) {
     onSubmit(values) {
       const json = JSON.stringify(values);
 
-      fetch(`${constants.BACKEND_URL}/student/${id}`, {
+      fetch(`${constants.BACKEND_URL}student/${id}`, {
         method: 'PATCH',
         body: json,
         headers: {
           Authorization: `Bearer ${authKey}`,
           Accept: 'application/json',
+          'Content-type': 'application/json'
         },
       })
-        .then(res => res.json())
+        .then(res => {
+          if (!res.ok) {
+            throw new Error('Failed')
+          }
+          return res.json();
+        })
         .then(response => {
+          console.log({ response })
           setInfo(response.data);
           toast.show({
             render: () => (
@@ -46,7 +52,7 @@ export default function EditProfile({id, authKey, info, navigation}) {
           });
         })
         .catch(err => {
-          console.error(err);
+          console.error({ err });
 
           toast.show({
             render: () => (

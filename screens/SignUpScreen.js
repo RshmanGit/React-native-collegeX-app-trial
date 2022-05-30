@@ -7,6 +7,9 @@ import {
   FormControl,
   Heading,
   Input,
+  HStack,
+  useToast,
+  Link,
   VStack,
 } from 'native-base';
 import React from 'react';
@@ -15,15 +18,10 @@ import { Formik } from 'formik';
 import * as yup from 'yup';
 import constants from '../constants';
 
-function signUpStudent(values) {
+async function signUpStudent(values, setHasAccount, toast) {
   var myHeaders = new Headers();
-  myHeaders.append(
-    'Authorization',
-    'Bearer 85d3005a-94d5-40ee-a657-c54be370aa74',
-  );
   myHeaders.append('Content-Type', 'application/json');
 
-  console.log('Raw: ', raw);
   var raw = JSON.stringify({
     firstName: values.firstName,
     lastName: values.lastName,
@@ -38,21 +36,55 @@ function signUpStudent(values) {
     redirect: 'follow',
   };
 
-  fetch(
+  return fetch(
     `${constants.BACKEND_URL}/student/signup/`,
     requestOptions,
   )
     .then(res => res.json())
-    .then(res => console.log(res))
-    .catch(err => console.log(err));
+    .then(res => {
+      if (!res.ok) {
+        return {
+          isError: true,
+          message: res.error
+        }
+      }
 
+      setHasAccount(true);
+      return {
+        isError: false,
+        message: 'Successfully logged in!'
+      }
+    })
+    .catch(err => {
+      toast.show({
+        render() {
+          return <Box>Error signing up: {JSON.stringify(err)}</Box>
+        }
+      })
+
+      return {
+        isError: true,
+        message: err.message || 'failed to signup',
+      }
+    });
 }
 
 const SignUpScreen = ({ setHasAccount }) => {
-  const handleSubmit = values => {
-    setHasAccount(true);
-    signUpStudent(values);
-  };
+  const toast = useToast();
+  const handleSubmit = async (values) => {
+    const { isError, message } = await signUpStudent(values, setHasAccount);
+
+    toast.show({
+      render() {
+        if (isError) {
+          return <Box bg='red.600' color='white'>{message}</Box>
+        } else {
+          return <Box bg='green.600'>{message}</Box>
+        }
+      }
+    })
+  }
+
   return (
     <Formik
       initialValues={{
@@ -97,7 +129,6 @@ const SignUpScreen = ({ setHasAccount }) => {
               <VStack space={3} mt="5">
                 <FormControl color="white">
                   <FormControl.Label color="white">
-                    {' '}
                     <Text style={{ color: 'white' }}>First Name</Text>
                   </FormControl.Label>
                   <Input
@@ -117,7 +148,6 @@ const SignUpScreen = ({ setHasAccount }) => {
 
                 <FormControl color="white">
                   <FormControl.Label color="white">
-                    {' '}
                     <Text style={{ color: 'white' }}>Last Name</Text>
                   </FormControl.Label>
                   <Input
@@ -137,7 +167,6 @@ const SignUpScreen = ({ setHasAccount }) => {
 
                 <FormControl color="white">
                   <FormControl.Label>
-                    {' '}
                     <Text style={{ color: 'white' }}>Email</Text>
                   </FormControl.Label>
                   <Input
@@ -181,6 +210,21 @@ const SignUpScreen = ({ setHasAccount }) => {
                   onPress={() => handleSubmit(values)}>
                   <Text style={{ color: '#009be5' }}>Sign up</Text>
                 </Button>
+
+                <Center>
+                  <HStack>
+                    <Text style={{ color: 'white' }}>Already have an account? </Text>
+                    <Link
+                      _text={{
+                        color: 'white',
+                        fontWeight: 'medium',
+                        fontSize: 'sm',
+                      }}
+                      onPress={() => setHasAccount(true)}>
+                      <Text style={{ color: 'white', fontWeight: 'bold', }}>Sign In</Text>
+                    </Link>
+                  </HStack>
+                </Center>
               </VStack>
             </Box>
           </Center>

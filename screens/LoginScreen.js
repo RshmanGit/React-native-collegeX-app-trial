@@ -10,18 +10,15 @@ import {
   Link,
   Text,
   VStack,
+  useToast
 } from 'native-base';
 import React from 'react';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 import constants from '../constants'
 
-function signInStudent(values, setIsLoggedIn, setAuthKey, setId) {
+async function signInStudent(values) {
   var myHeaders = new Headers();
-  myHeaders.append(
-    'Authorization',
-    'Bearer 82dbc427-8ece-4575-9148-9b39eb64aa2b',
-  );
   myHeaders.append('Content-Type', 'application/json');
 
   var raw = JSON.stringify({
@@ -36,30 +33,97 @@ function signInStudent(values, setIsLoggedIn, setAuthKey, setId) {
     redirect: 'follow',
   };
 
-  fetch(
-    `${constants.BACKEND_URL}/student/signin/`,
-    requestOptions,
-  )
-    .then(response => response.json())
-    .then(result => {
-      console.log(result);
-      const { authKey, id } = result.data;
-      setId(id)
-      setAuthKey(authKey)
-    })
-    .then(() => setIsLoggedIn(true))
-    .catch(error => console.log('error', error));
+  try {
+    const res = await fetch(
+      `${constants.BACKEND_URL}/student/signin/`,
+      requestOptions,
+    );
+
+    const result = await res.json();
+    if (!res.ok) {
+      return {
+        isError: true,
+        message: result.error,
+      }
+    }
+
+    return {
+      isError: false,
+      message: result.message,
+      data: result.data
+    };
+  } catch (err) {
+    return {
+      isError: true,
+      message: error.error || error.message || 'Failed to login'
+    }
+  }
+
+  // .then(response => {
+  //   const json = response.json();
+  //   if (!response.ok) {
+  //     console.log('response:', response)
+  //     throw new Error(response.error)
+  //     // console.log({ response, json })
+  //     // return {
+  //     //   isError: true,
+  //     //   message: response.error
+  //     // }
+  //   }
+
+  //   return json;
+  // })
+  // .then(result => {
+  //   console.log('result: ', result);
+
+  //   return {
+  //     isError: false,
+  //     data: result.data,
+  //     message: 'Succesfully logged in!'
+  //   }
+  // })
+  // // .then(() => {
+  // //   toast.show({
+  // //     render: () => (
+  // //       <Box bg="green.200" px="2" py="1" rounded="sm" mb={5}>login success</Box>
+  // //     ),
+  // //   });
+  // // })
+  // .catch(error => {
+  //   // toast.show({
+  //   //   render() {
+  //   //     return <Box>Error: {JSON.stringify(error)}</Box>
+  //   //   }
+  //   // })
+  //   console.log(error)
+  //   return {
+  //     isError: true,
+  //     message: error.error || error.message || 'Failed to login'
+  //   }
+  // });
 }
 
 
 // create a component
 export default function LoginScreen({ setIsLoggedIn, setHasAccount, setId, setAuthKey }) {
+  const toast = useToast();
   const handleSignUp = () => {
     setHasAccount(false);
   };
-  const handleSubmit = values => {
-    // setIsLoggedIn(true);
-    signInStudent(values, setIsLoggedIn, setAuthKey, setId);
+  const handleSubmit = async (values) => {
+    const { data, isError, message } = await signInStudent(values, setIsLoggedIn, setAuthKey, setId, toast)
+    console.log({ data, isError, message })
+    if (!isError) {
+      const { authKey, id } = data
+      setId(id)
+      setAuthKey(authKey)
+      setIsLoggedIn(true)
+    }
+    toast.show({
+      render() {
+        return <Box px="2" py="1" rounded="sm" mb={5} bgColor={isError ? 'red.600' : 'green.600'} _text={{ color: 'white' }}>{message}</Box>
+      }
+    })
   };
   return (
     <Formik
@@ -77,7 +141,7 @@ export default function LoginScreen({ setIsLoggedIn, setHasAccount, setId, setAu
           .required(),
       })}>
       {({ values, handleChange, errors, setFieldTouched, touched, isValid }) => (
-        <Box bgColor={'#009be5'} py={'35%'}>
+        <Box bgColor={'#009be5'} py={'40%'}>
           <Center w="100%">
             <Box safeArea p="2" py="8" w="90%" maxW="290">
               <Heading
@@ -165,7 +229,6 @@ export default function LoginScreen({ setIsLoggedIn, setHasAccount, setId, setAu
               </VStack>
             </Box>
           </Center>
-          <Text> </Text>
         </Box>
       )}
     </Formik>

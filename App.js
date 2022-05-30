@@ -71,10 +71,10 @@ function MyTabs({ authKey, id }) {
 }
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const [hasAccount, setHasAccount] = useState(true);
-  const [id, setId] = useState(1);
-  const [authKey, setAuthKey] = useState('a6398e1b-eaee-4af5-8b08-be5d4b75ad79');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [hasAccount, setHasAccount] = useState(false);
+  const [id, setId] = useState(null);
+  const [authKey, setAuthKey] = useState('');
 
   return (
     <NativeBaseProvider>
@@ -83,7 +83,6 @@ const App = () => {
           <LoginScreen
             setIsLoggedIn={setIsLoggedIn}
             setHasAccount={setHasAccount}
-            // signInStudent={signInStudent}
             setId={setId}
             setAuthKey={setAuthKey}
           />

@@ -156,10 +156,10 @@ export default function HomeScreen({ id, authKey }) {
 
               <ScrollView>
                 <VStack space={3} px={2} py={3}>
-                  {Object.entries(keyDates).map(([name, keyDate]) => {
+                  {Object.entries(keyDates).length > 0 && Object.entries(keyDates).map(([name, keyDate]) => {
                     if (activeDate === name)
                       return keyDate.map((kd, i) => (
-                        <TouchableOpacity>
+                        <TouchableOpacity key={i}>
                           <Box textAlign="start" borderRadius="lg" p={4} backgroundColor="gray.200" key={i}>
                             <Text fontSize="lg" fontWeight="bold">
                               {kd.title}
@@ -168,9 +168,9 @@ export default function HomeScreen({ id, authKey }) {
                           </Box>
                         </TouchableOpacity>
                       ));
-
-                    return 'No tasks for you.. Enjoy!!';
                   })}
+
+                  {/* {Object.entries(keyDates).filter(keydate => keydate === activeDate).length == 0 && <Text>No keydates enjoy!</Text>} */}
                 </VStack>
               </ScrollView>
             </Flex>
