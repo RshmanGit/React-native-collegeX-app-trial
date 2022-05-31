@@ -15,7 +15,7 @@ import LoginScreen from './screens/LoginScreen';
 
 const Tab = createMaterialBottomTabNavigator();
 
-function MyTabs({ authKey, id }) {
+function MyTabs({ authKey, id, logout }) {
   return (
     <Tab.Navigator initialRouteName="Home" activeColor="#fff">
       <Tab.Screen
@@ -53,7 +53,7 @@ function MyTabs({ authKey, id }) {
           tabBarLabel: 'Profile',
           tabBarIcon: () => <Icon name="account" size={25} color="white" />,
         }}>
-        {props => <ProfileScreen {...props} authKey={authKey} id={id} />}
+        {props => <ProfileScreen {...props} authKey={authKey} id={id} logout={logout} />}
       </Tab.Screen>
 
       {/* <Tab.Screen
@@ -76,6 +76,13 @@ const App = () => {
   const [id, setId] = useState(null);
   const [authKey, setAuthKey] = useState('');
 
+  const logout = () => {
+    setHasAccount(true);
+    setId(null);
+    setAuthKey('')
+    setIsLoggedIn(false)
+  }
+
   return (
     <NativeBaseProvider>
       <NavigationContainer>
@@ -88,7 +95,7 @@ const App = () => {
           />
         )}
         {!hasAccount && <SignUpScreen setHasAccount={setHasAccount} />}
-        {isLoggedIn && hasAccount && <MyTabs id={id} authKey={authKey} />}
+        {isLoggedIn && hasAccount && <MyTabs id={id} authKey={authKey} logout={logout} />}
       </NavigationContainer>
     </NativeBaseProvider>
   );

@@ -9,7 +9,7 @@ import constants from '../../constants';
 const Stack = createStackNavigator();
 
 // Create a Stack navigator that renders the profile or edit profile component
-export default function ProfileScreen({ id, authKey }) {
+export default function ProfileScreen({ id, authKey, logout }) {
   const [info, setInfo] = useState({});
   const toast = useToast();
 
@@ -35,9 +35,9 @@ export default function ProfileScreen({ id, authKey }) {
   }, []);
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName='Show Profile'>
       <Stack.Screen name="Show Profile">
-        {({ navigation }) => <Profile info={info} navigation={navigation} />}
+        {({ navigation }) => <Profile info={info} navigation={navigation} logout={logout} />}
       </Stack.Screen>
       <Stack.Screen name='Edit Profile'>
         {({ navigation }) => <EditProfile authKey={authKey} id={id} info={info} setInfo={setInfo} navigation={navigation} />}
