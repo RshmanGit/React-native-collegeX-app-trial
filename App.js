@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 import { NativeBaseProvider } from 'native-base';
 import SignUpScreen from './screens/SignUpScreen';
 import LoginScreen from './screens/LoginScreen';
+import CollegeExplore from './screens/CollegeExplore';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -35,6 +36,16 @@ function MyTabs({ authKey, id, logout }) {
         }}>
         {props => <OptedScreen {...props} id={id} authKey={authKey} />}
       </Tab.Screen>
+
+      <Tab.Screen
+        name="CollegeBrowse"
+        options={{
+          tabBarLabel: 'Browse College',
+          tabBarIcon: () => <Icon name="earth" size={25} color="white" />,
+        }}>
+        {props => <CollegeExplore {...props} id={id} authKey={authKey} />}
+      </Tab.Screen>
+
 
       {/* <Tab.Screen
         name="ChatBot"
