@@ -125,7 +125,7 @@ export default function EditProfile({ id, authKey, info, setInfo, navigation }) 
             <Button colorScheme="blue" onPress={formik.handleSubmit} mr={4}>
               Submit
             </Button>
-            <Button colorScheme="gray" onPress={navigation.pop}>
+            <Button colorScheme="gray" onPress={navigation.goBack}>
               Discard
             </Button>
           </Flex>
