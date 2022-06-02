@@ -53,7 +53,7 @@ const CalenderComp = ({
 };
 
 // create a component
-export default function HomeScreen({ id, authKey }) {
+export default function HomeScreen({ id, authKey, logout }) {
   const [keyDates, setKeyDates] = useState([]);
   const [activeDate, setActiveDate] = useState();
   const [markedDates, setMarkedDates] = useState({});
@@ -74,8 +74,24 @@ export default function HomeScreen({ id, authKey }) {
         Authorization: `Bearer ${authKey}`,
       },
     })
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok && res.status == 401) {
+          logout()
+        }
+
+        try {
+          return res.json();
+        } catch (err) {
+          return {
+            isError: true,
+            message: 'Something went wrong! Try logging in again!'
+          }
+        }
+      })
       .then(response => {
+        if (!response.data) {
+          return
+        }
         const data = response.data.reduce((acc, keyDate) => {
           const date = new Date(keyDate.endDate)
             .getDate()
@@ -169,8 +185,6 @@ export default function HomeScreen({ id, authKey }) {
                         </TouchableOpacity>
                       ));
                   })}
-
-                  {/* {Object.entries(keyDates).filter(keydate => keydate === activeDate).length == 0 && <Text>No keydates enjoy!</Text>} */}
                 </VStack>
               </ScrollView>
             </Flex>

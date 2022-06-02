@@ -13,6 +13,7 @@ import { NativeBaseProvider } from 'native-base';
 import SignUpScreen from './screens/SignUpScreen';
 import LoginScreen from './screens/LoginScreen';
 import CollegeExplore from './screens/CollegeExplore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -25,7 +26,7 @@ function MyTabs({ authKey, id, logout }) {
           tabBarLabel: 'Home',
           tabBarIcon: () => <Icon name="home" size={25} color="white" />,
         }}>
-        {props => <HomeScreen {...props} authKey={authKey} id={id} />}
+        {props => <HomeScreen {...props} authKey={authKey} id={id} logout={logout} />}
       </Tab.Screen>
 
       <Tab.Screen
@@ -45,7 +46,6 @@ function MyTabs({ authKey, id, logout }) {
         }}>
         {props => <CollegeExplore {...props} id={id} authKey={authKey} />}
       </Tab.Screen>
-
 
       {/* <Tab.Screen
         name="ChatBot"
@@ -87,12 +87,57 @@ const App = () => {
   const [id, setId] = useState(null);
   const [authKey, setAuthKey] = useState('');
 
-  const logout = () => {
-    setHasAccount(true);
+  const logout = async () => {
+    try {
+      await AsyncStorage.removeItem('@collegex_credentials');
+    } catch (error) {
+      console.log(error);
+    }
+
     setId(null);
-    setAuthKey('')
-    setIsLoggedIn(false)
+    setAuthKey('');
+    setHasAccount(true);
+    setIsLoggedIn(false);
   }
+
+  // check if admin key and id exists in asyncstorage..
+  // if they exist well login them, else show login/signup screen
+  const handleLogin = async () => {
+    try {
+      const cred = await AsyncStorage.getItem('@collegex_credentials');
+      const parse = JSON.parse(cred);
+      console.log('sucess!!', parse);
+
+      // since parsing can result into null values
+      if (parse) {
+        return {
+          ...parse,
+          isError: false,
+        }
+      }
+
+      return {
+        isError: true,
+      }
+
+    } catch (error) {
+      return {
+        isError: true,
+      }
+    }
+  }
+
+  useEffect(() => {
+    handleLogin()
+      .then(({ isError, authKey, id }) => {
+        if (!isError) {
+          setId(id);
+          setAuthKey(authKey);
+          setIsLoggedIn(true);
+          setHasAccount(true);
+        }
+      })
+  }, [])
 
   return (
     <NativeBaseProvider>

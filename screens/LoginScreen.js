@@ -16,6 +16,7 @@ import React from 'react';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 import constants from '../constants'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 async function signInStudent(values) {
   var myHeaders = new Headers();
@@ -47,6 +48,19 @@ async function signInStudent(values) {
       }
     }
 
+    // successfull login..
+    const { id, authKey } = result.data;
+    try {
+      const creds = JSON.stringify({ id, authKey });
+      await AsyncStorage.setItem('@collegex_credentials', creds);
+    } catch (e) {
+      console.log('failed to store credentials. You can use the app, But on subsequent login you might need to reenter your data');
+      return {
+        isError: true,
+        message: 'Failed to save credentials'
+      }
+    }
+
     return {
       isError: false,
       message: result.message,
@@ -58,49 +72,6 @@ async function signInStudent(values) {
       message: error.error || error.message || 'Failed to login'
     }
   }
-
-  // .then(response => {
-  //   const json = response.json();
-  //   if (!response.ok) {
-  //     console.log('response:', response)
-  //     throw new Error(response.error)
-  //     // console.log({ response, json })
-  //     // return {
-  //     //   isError: true,
-  //     //   message: response.error
-  //     // }
-  //   }
-
-  //   return json;
-  // })
-  // .then(result => {
-  //   console.log('result: ', result);
-
-  //   return {
-  //     isError: false,
-  //     data: result.data,
-  //     message: 'Succesfully logged in!'
-  //   }
-  // })
-  // // .then(() => {
-  // //   toast.show({
-  // //     render: () => (
-  // //       <Box bg="green.200" px="2" py="1" rounded="sm" mb={5}>login success</Box>
-  // //     ),
-  // //   });
-  // // })
-  // .catch(error => {
-  //   // toast.show({
-  //   //   render() {
-  //   //     return <Box>Error: {JSON.stringify(error)}</Box>
-  //   //   }
-  //   // })
-  //   console.log(error)
-  //   return {
-  //     isError: true,
-  //     message: error.error || error.message || 'Failed to login'
-  //   }
-  // });
 }
 
 

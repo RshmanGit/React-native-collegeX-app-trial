@@ -1,10 +1,8 @@
 import React from 'react';
-import { Avatar, Flex, Text, Box, Icon, Button, VStack, useToast} from 'native-base';
+import { Avatar, Flex, Text, Box, Icon, Button, VStack } from 'native-base';
 import { FontAwesome } from '@expo/vector-icons';
 
 export default function Profile({ info, navigation, logout }) {
-  const toast = useToast();
-
   return (
     <Flex flex={1} bg='white' p={12}>
       <VStack space={4}>
@@ -26,7 +24,7 @@ export default function Profile({ info, navigation, logout }) {
         </Box>
         <Flex direction='row'>
           <Button borderRadius={'lg'} mr={4} onPress={() => navigation.navigate('Edit Profile')}>Update Profile</Button>
-          <Button borderRadius={'lg'} colorScheme='gray' onPress={logout}>Logout</Button> 
+          <Button borderRadius={'lg'} colorScheme='gray' onPress={logout}>Logout</Button>
         </Flex>
       </VStack>
     </Flex>
