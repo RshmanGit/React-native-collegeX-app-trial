@@ -9,11 +9,13 @@ import ProfileScreen from './screens/ProfileScreen/StackNavigator';
 // import SettingsScreen from './screens/SettingsScreen';
 // import SplashScreen from 'react-native-splash-screen';
 import { useEffect, useState } from 'react';
-import { NativeBaseProvider } from 'native-base';
+import { Box, NativeBaseProvider } from 'native-base';
 import SignUpScreen from './screens/SignUpScreen';
 import LoginScreen from './screens/LoginScreen';
+import ForgetPasswordScreen from './screens/ForgetPasswordScreen';
 import CollegeExplore from './screens/CollegeExplore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createStackNavigator } from '@react-navigation/stack';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -81,9 +83,10 @@ function MyTabs({ authKey, id, logout }) {
   );
 }
 
+const LoginStack = createStackNavigator();
+
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [hasAccount, setHasAccount] = useState(false);
+  // using stack navigator inplace of state
   const [id, setId] = useState(null);
   const [authKey, setAuthKey] = useState('');
 
@@ -96,8 +99,7 @@ const App = () => {
 
     setId(null);
     setAuthKey('');
-    setHasAccount(true);
-    setIsLoggedIn(false);
+    navigator.navigate('LoginScreen');
   }
 
   // check if admin key and id exists in asyncstorage..
@@ -133,8 +135,7 @@ const App = () => {
         if (!isError) {
           setId(id);
           setAuthKey(authKey);
-          setIsLoggedIn(true);
-          setHasAccount(true);
+          navigator.navigate('Dashboard');
         }
       })
   }, [])
@@ -142,16 +143,33 @@ const App = () => {
   return (
     <NativeBaseProvider>
       <NavigationContainer>
+        <LoginStack.Navigator screenOptions={{ header: () => null }}>
+          <LoginStack.Screen name='SignUpScreen'>
+            {(props) => <SignUpScreen {...props} />}
+          </LoginStack.Screen>
+          <LoginStack.Screen name='LoginScreen'>
+            {props => <LoginScreen setId={setId} setAuthKey={setAuthKey}  {...props} />}
+          </LoginStack.Screen>
+          <LoginStack.Screen name='ForgetPasswordScreen'>
+            {props => <ForgetPasswordScreen {...props} />}
+          </LoginStack.Screen>
+          <LoginStack.Screen name='Dashboard'>
+            {props => <MyTabs id={id} authKey={authKey} logout={logout} {...props} />}
+          </LoginStack.Screen>
+        </LoginStack.Navigator>
+{/* 
         {!isLoggedIn && hasAccount && (
           <LoginScreen
             setIsLoggedIn={setIsLoggedIn}
             setHasAccount={setHasAccount}
             setId={setId}
             setAuthKey={setAuthKey}
+            setForgetPassword={setForgetPassword} 
           />
         )}
         {!hasAccount && <SignUpScreen setHasAccount={setHasAccount} />}
-        {isLoggedIn && hasAccount && <MyTabs id={id} authKey={authKey} logout={logout} />}
+        {isLoggedIn && hasAccount && <MyTabs id={id} authKey={authKey} logout={logout}/>}
+        {hasAccount && forgetPassword && <ForgetPasswordScreen setIsLoggedIn={setIsLoggedIn} setHasAccount={setHasAccount} />} */}
       </NavigationContainer>
     </NativeBaseProvider>
   );

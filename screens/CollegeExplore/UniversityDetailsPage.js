@@ -1,4 +1,4 @@
-import { Box, useToast, Flex, Button, VStack, Modal, FormControl, Input, Select, CheckIcon, Center, WarningOutlineIcon } from 'native-base'
+import { Box, useToast, Flex, Button, VStack, Modal, FormControl, Input, Select, CheckIcon, Center, WarningOutlineIcon, Heading } from 'native-base'
 import UniversityDetails from '../../components/UniversityDetails';
 import { useState } from 'react';
 import constants from '../../constants';
@@ -34,7 +34,9 @@ export default function UniversityDetailsPage({ id, authKey, route, navigation }
   }
 
   return (
-    <Flex flex={1} p={5}>
+    <Flex flex={1} p={5} py={12}>
+      <Heading pb={8}>University Detail</Heading>
+
       <UniversityDetails data={data} />
       <VStack space={2} pt={4}>
         <Button onPress={() => { setShowModal(true); console.log(data) }}>Apply</Button>

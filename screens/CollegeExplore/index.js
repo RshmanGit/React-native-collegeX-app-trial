@@ -31,7 +31,7 @@ export default function CollegeExplore({ authKey, id }) {
   }, [])
 
   return (
-    <Stack.Navigator initialRouteName='UniversityList'>
+    <Stack.Navigator screenOptions={{ header: () => null }} initialRouteName='UniversityList'>
       <Stack.Screen name="UniversityList">
         {(reactNavigationProps) => <UniversityListPage authKey={authKey} universityList={universityList} {...reactNavigationProps} />}
       </Stack.Screen>

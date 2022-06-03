@@ -40,6 +40,7 @@ async function signInStudent(values) {
       requestOptions,
     );
 
+    console.log({ ok: res.ok, status: res.status });
     const result = await res.json();
     if (!res.ok) {
       return {
@@ -54,7 +55,7 @@ async function signInStudent(values) {
       const creds = JSON.stringify({ id, authKey });
       await AsyncStorage.setItem('@collegex_credentials', creds);
     } catch (e) {
-      console.log('failed to store credentials. You can use the app, But on subsequent login you might need to reenter your data');
+      console.log('failed to store credentials. You can use the app, But on subsequent login you might need to relogin');
       return {
         isError: true,
         message: 'Failed to save credentials'
@@ -69,26 +70,26 @@ async function signInStudent(values) {
   } catch (err) {
     return {
       isError: true,
-      message: error.error || error.message || 'Failed to login'
+      message: 'Failed to login'
     }
   }
 }
 
 
 // create a component
-export default function LoginScreen({ setIsLoggedIn, setHasAccount, setId, setAuthKey }) {
+export default function LoginScreen({ setId, setAuthKey, navigation }) {
   const toast = useToast();
-  const handleSignUp = () => {
-    setHasAccount(false);
-  };
+
   const handleSubmit = async (values) => {
-    const { data, isError, message } = await signInStudent(values, setIsLoggedIn, setAuthKey, setId, toast)
-    console.log({ data, isError, message })
+    const { data, isError, message } = await signInStudent(values);
+    console.log({ data, isError, message });
+    console.log('in handle submit')
     if (!isError) {
-      const { authKey, id } = data
-      setId(id)
-      setAuthKey(authKey)
-      setIsLoggedIn(true)
+      const { authKey, id } = data;
+      setId(id);
+      setAuthKey(authKey);
+
+      navigation.navigate('Dashboard');
     }
     toast.show({
       render() {
@@ -174,7 +175,7 @@ export default function LoginScreen({ setIsLoggedIn, setHasAccount, setId, setAu
                     }}
                     alignSelf="flex-end"
                     mt="1">
-                    <Text style={{ color: 'white' }}>Forget Password?</Text>
+                    <Text onPress={() => navigation.navigate('ForgetPasswordScreen')} style={{ color: 'white' }}>Forget Password?</Text>
                   </Link>
                 </FormControl>
                 <Button
@@ -193,7 +194,7 @@ export default function LoginScreen({ setIsLoggedIn, setHasAccount, setId, setAu
                       fontWeight: 'medium',
                       fontSize: 'sm',
                     }}
-                    onPress={handleSignUp}>
+                    onPress={() => navigation.navigate('SignUpScreen')}>
                     <Text style={{ color: 'white' }}> Sign Up</Text>
                   </Link>
                 </HStack>

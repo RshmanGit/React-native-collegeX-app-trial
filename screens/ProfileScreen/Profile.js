@@ -1,10 +1,11 @@
 import React from 'react';
-import { Avatar, Flex, Text, Box, Icon, Button, VStack } from 'native-base';
+import { Avatar, Flex, Text, Box, Icon, Button, VStack, Heading } from 'native-base';
 import { FontAwesome } from '@expo/vector-icons';
 
 export default function Profile({ info, navigation, logout }) {
   return (
-    <Flex flex={1} bg='white' p={12}>
+    <Flex flex={1} bg='white' p={12} >
+      <Heading pb={12}>Profile</Heading>
       <VStack space={4}>
         <Flex direction='row' alignItems='center'>
           <Avatar size='lg' mr={8} source={{ url: 'https://profile.url' }}>P</Avatar>

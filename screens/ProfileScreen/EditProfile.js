@@ -8,6 +8,7 @@ import {
   Stack,
   FormControl,
   Input,
+  Heading,
 } from 'native-base';
 
 import constants from '../../constants';
@@ -67,6 +68,8 @@ export default function EditProfile({ id, authKey, info, setInfo, navigation }) 
 
   return (
     <Flex flex={1} bg="white" p={12}>
+      <Heading pb={12}>Edit Profile</Heading>
+      
       <FormControl>
         <Stack space={4}>
           <Stack>

@@ -35,7 +35,7 @@ export default function ProfileScreen({ id, authKey, logout }) {
   }, []);
 
   return (
-    <Stack.Navigator initialRouteName='Show Profile'>
+    <Stack.Navigator initialRouteName='Show Profile' screenOptions={{ header: () => null }}>
       <Stack.Screen name="Show Profile">
         {({ navigation }) => <Profile info={info} navigation={navigation} logout={logout} />}
       </Stack.Screen>

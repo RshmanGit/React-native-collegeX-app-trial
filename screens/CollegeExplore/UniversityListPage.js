@@ -32,7 +32,7 @@ export default function UniversityList({ authKey, universityList, navigation }) 
   }
 
   return (
-    <Flex px={5} flex={1} background="white">
+    <Flex py={8} px={5} flex={1} background="white">
       <Box py={4}>
         <HStack justifyContent='center' alignItems='center' space={4}>
           <Input placeholder='Search' flex={1} onChangeText={val => setSearchTerm(val)} />

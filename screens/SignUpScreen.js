@@ -18,7 +18,7 @@ import { Formik } from 'formik';
 import * as yup from 'yup';
 import constants from '../constants';
 
-async function signUpStudent(values, setHasAccount, toast) {
+async function signUpStudent(values) {
   var myHeaders = new Headers();
   myHeaders.append('Content-Type', 'application/json');
 
@@ -49,19 +49,13 @@ async function signUpStudent(values, setHasAccount, toast) {
         }
       }
 
-      setHasAccount(true);
+      navigation.navigate('LoginScreen');
       return {
         isError: false,
         message: 'Successfully logged in!'
       }
     })
     .catch(err => {
-      toast.show({
-        render() {
-          return <Box>Error signing up: {JSON.stringify(err)}</Box>
-        }
-      })
-
       return {
         isError: true,
         message: err.message || 'failed to signup',
@@ -69,10 +63,10 @@ async function signUpStudent(values, setHasAccount, toast) {
     });
 }
 
-const SignUpScreen = ({ setHasAccount }) => {
+const SignUpScreen = ({ navigation }) => {
   const toast = useToast();
   const handleSubmit = async (values) => {
-    const { isError, message } = await signUpStudent(values, setHasAccount);
+    const { isError, message } = await signUpStudent(values);
 
     toast.show({
       render() {
@@ -83,6 +77,8 @@ const SignUpScreen = ({ setHasAccount }) => {
         }
       }
     })
+    
+    navigation.navigate('LoginScreen');
   }
 
   return (
@@ -220,8 +216,8 @@ const SignUpScreen = ({ setHasAccount }) => {
                         fontWeight: 'medium',
                         fontSize: 'sm',
                       }}
-                      onPress={() => setHasAccount(true)}>
-                      <Text style={{ color: 'white', fontWeight: 'bold', }}>Sign In</Text>
+                      onPress={() => navigation.navigate('LoginScreen')}>
+                      <Text style={{ color: 'white', fontWeight: 'bold' }}>Sign In</Text>
                     </Link>
                   </HStack>
                 </Center>
