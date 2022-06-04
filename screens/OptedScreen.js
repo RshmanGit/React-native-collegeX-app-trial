@@ -1,10 +1,10 @@
 /* eslint-disable react-native/no-inline-styles */
-import { Box, ScrollView, Text, Flex, Button, Avatar, useToast, VStack, HStack } from 'native-base';
+import { Box, ScrollView, Text, Flex, useToast, VStack } from 'native-base';
 import React, { useState, useEffect } from 'react';
-import { TouchableOpacity } from 'react-native';
 import UniversityCard from '../components/UniversityCard';
 import constants from '../constants';
 
+// creates the options from the options
 const ListFromOptions = ({ title, list, color, handleButtonClick }) => {
   return (
     <Box m={4}>
@@ -22,6 +22,9 @@ const ListFromOptions = ({ title, list, color, handleButtonClick }) => {
   );
 };
 
+// fetches teh opted colleges..
+// takes in the authkey 
+// return { isError, data?, message }
 async function fetchOptedColleges(authKey) {
   try {
     const res = await fetch(`${constants.BACKEND_URL}/student/getOptions`, {
@@ -32,6 +35,7 @@ async function fetchOptedColleges(authKey) {
 
     const json = await res.json()
 
+    // handle non 200 status code
     if (!res.ok) {
       return {
         isError: true,
@@ -39,6 +43,8 @@ async function fetchOptedColleges(authKey) {
       }
     }
 
+    // converted the data into following format
+    // { target: [], reach: [], safety: [] }
     const data = json.data.reduce((acc, d) => {
       const { university, type } = d;
       acc[type].push(university);
@@ -64,6 +70,9 @@ export default function OptedScreen({ id, authKey, navigation }) {
   const [opted, setOpted] = useState({ target: [], reach: [], safety: [] });
 
   const showUniversityScreen = (data) => {
+    // navigating to UniversityDetails
+    // second argument passes the university data.. 
+    // so that it can be accesed in the UniversityDetailscompoenent
     navigation.navigate('UniversityDetails', { data })
   }
 

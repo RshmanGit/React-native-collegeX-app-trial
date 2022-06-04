@@ -1,56 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { Box, Text, Flex, Center, ScrollView, VStack, Circle } from 'native-base';
-import { Calendar } from 'react-native-calendars';
+import CalenderComponent from '../components/CalenderComponent';
 import constants from '../constants';
 
 const lookupDay = num => {
   const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   if (num < 0 || num > 6) return '';
-
   return days[num];
 };
 
-const CalenderComp = ({
-  keyDates,
-  setActiveDate,
-  markedDates,
-  setMarkedDates,
-}) => {
-  return (
-    <Box mt={4}>
-      <Calendar
-        firstDay={0}
-        hideExtraDays={true}
-        enableSwipeMonths={true}
-        onDayPress={day => {
-          setActiveDate(day.dateString);
-          setMarkedDates({
-            [day.dateString]: {
-              selected: true,
-              selectedColor: '#3B82F6',
-              textColor: 'white',
-            },
-          });
-        }}
-        onMonthChange={month => {
-          setActiveDate(month.dateString);
-        }}
-        markedDates={markedDates}
-        theme={{
-          todayTextColor: '#3B82F6',
-          'stylesheet.calendar.header': {
-            dayHeader: {
-              color: '#616061',
-              fontWeight: 'bold',
-            },
-          },
-          arrowColor: '#3B82F6',
-        }}
-      />
-    </Box>
-  );
-};
 
 // create a component
 export default function HomeScreen({ id, authKey, logout }) {
@@ -58,7 +17,9 @@ export default function HomeScreen({ id, authKey, logout }) {
   const [activeDate, setActiveDate] = useState();
   const [markedDates, setMarkedDates] = useState({});
 
-  // copied form stackoverflow
+  // -- not implemented
+  // copied form stackoverflow 
+  // for dynamic color generation for calendar highlight
   // function getRandomColor() {
   //   const letters = '0123456789ABCDEF';
   //   let color = '#';
@@ -68,6 +29,9 @@ export default function HomeScreen({ id, authKey, logout }) {
   //   return color;
   // }
 
+  // this is the first screen that is showed on login
+  // so fetching keydates is gaurnteed and if user is logged in with wrong credentials
+  // then log him out and show the login screen
   useEffect(() => {
     fetch(`${constants.BACKEND_URL}/keyDate/?studentId=${id}`, {
       headers: {
@@ -75,6 +39,7 @@ export default function HomeScreen({ id, authKey, logout }) {
       },
     })
       .then(res => {
+        // here is where logout happens
         if (!res.ok && res.status == 401) {
           logout()
         }
@@ -105,6 +70,8 @@ export default function HomeScreen({ id, authKey, logout }) {
             .getFullYear()
             .toString()
             .padStart(4, '0');
+
+          // formatting the way calendar component wants
           const str = `${year}-${month}-${date}`;
 
           if (!Array.isArray(acc[str])) {
@@ -121,6 +88,9 @@ export default function HomeScreen({ id, authKey, logout }) {
 
           return acc;
         }, {});
+
+        // this part is to highlight the calendar component
+        // i was not able to figure it out previously.. 
 
         // const marked = response.data.reduce((acc, keyDate) => {
         //   const date = new Date(keyDate.endDate).getDate().toString().padStart(2, '0');
@@ -146,7 +116,7 @@ export default function HomeScreen({ id, authKey, logout }) {
         backgroundColor: 'white',
       }}>
       <Flex direction="column" flex={1} w="100%" textAlign="center">
-        <CalenderComp
+        <CalenderComponent
           setActiveDate={setActiveDate}
           keyDates={keyDates}
           markedDates={markedDates}

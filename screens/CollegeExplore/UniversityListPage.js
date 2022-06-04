@@ -9,8 +9,11 @@ export default function UniversityList({ authKey, universityList, navigation }) 
   const [displayResult, setDisplayResult] = useState(universityList)
   const toast = useToast();
 
-  // to synchronize for first render
+  // why not search in the all universities?
+  // because.. if pagination is implemented then "all universities in state" != "all universities"
   useEffect(() => {
+
+    // initially set to display the fetched universities
     setDisplayResult(universityList)
   }, [universityList])
 
@@ -55,6 +58,8 @@ export default function UniversityList({ authKey, universityList, navigation }) 
   )
 }
 
+// fetch universities according to search!
+// returns - { isError, message, data? } 
 async function fetchSearchedUniversity(authKey, searchTerm) {
   try {
     const res = await fetch(`${constants.BACKEND_URL}/university/?search=${searchTerm}`, {

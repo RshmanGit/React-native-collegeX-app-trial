@@ -23,9 +23,12 @@ export default function EditProfile({ id, authKey, info, setInfo, navigation }) 
       highSchoolName: info.highSchoolName || '',
       highSchoolDistrict: info.highSchoolDistrict || '',
     },
+    // this gets called on form submit
+    // formik passes the values prop
     onSubmit(values) {
       const json = JSON.stringify(values);
-
+      
+      // Student Detail PATCH request happens here!
       fetch(`${constants.BACKEND_URL}student/${id}`, {
         method: 'PATCH',
         body: json,

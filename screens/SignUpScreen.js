@@ -1,5 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
-//import liraries
 import {
   Box,
   Button,
@@ -18,6 +16,8 @@ import { Formik } from 'formik';
 import * as yup from 'yup';
 import constants from '../constants';
 
+// handles student signup
+// params - accepts an object with { firstName, lastName, email, password } structure
 async function signUpStudent(values) {
   var myHeaders = new Headers();
   myHeaders.append('Content-Type', 'application/json');
@@ -63,6 +63,8 @@ async function signUpStudent(values) {
     });
 }
 
+// Gets all the stackNavigator props 
+// Only needed the navigation prop for navigating other screens
 const SignUpScreen = ({ navigation }) => {
   const toast = useToast();
   const handleSubmit = async (values) => {
@@ -93,11 +95,7 @@ const SignUpScreen = ({ navigation }) => {
         firstName: yup.string().required(),
         lastName: yup.string().required(),
         email: yup.string().email().required(),
-        password: yup
-          .string()
-          .min(4)
-          .max(14, 'Password should not excced 14 chars.')
-          .required(),
+        password: yup.string().min(4).max(14, 'Password should not excced 14 chars.').required(),
       })}>
       {({ values, handleChange, errors, setFieldTouched, touched, isValid }) => (
         <Box bgColor={'#009be5'} py={'35%'}>

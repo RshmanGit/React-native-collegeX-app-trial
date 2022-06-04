@@ -15,6 +15,7 @@ import React from 'react';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 
+// Takes navigation props
 export default function ForgetPasswordScreen({ navigation }) {
   const toast = useToast();
   

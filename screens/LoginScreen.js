@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import {
   Box,
   Button,
@@ -18,6 +17,8 @@ import { Formik } from 'formik';
 import constants from '../constants'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+// input - { email, password }
+// output - { isError, data(on sucess), message }
 async function signInStudent(values) {
   var myHeaders = new Headers();
   myHeaders.append('Content-Type', 'application/json');
@@ -75,22 +76,26 @@ async function signInStudent(values) {
   }
 }
 
-
 // create a component
 export default function LoginScreen({ setId, setAuthKey, navigation }) {
   const toast = useToast();
 
+  // handle login calls the signInStudent internally 
   const handleSubmit = async (values) => {
     const { data, isError, message } = await signInStudent(values);
-    console.log({ data, isError, message });
-    console.log('in handle submit')
+    
     if (!isError) {
+      // Login success
       const { authKey, id } = data;
       setId(id);
       setAuthKey(authKey);
 
+      // navigate to dashboard
       navigation.navigate('Dashboard');
     }
+    // else failed to login
+
+    // show toast for feedback
     toast.show({
       render() {
         return <Box px="2" py="1" rounded="sm" mb={5} bgColor={isError ? 'red.600' : 'green.600'} _text={{ color: 'white' }}>{message}</Box>

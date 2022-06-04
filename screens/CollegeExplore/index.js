@@ -13,6 +13,7 @@ export default function CollegeExplore({ authKey, id }) {
   const toast = useToast();
   const [universityList, setUniversityList] = useState([]);
 
+  // fetch "all universities" on first render..
   useEffect(() => {
     fetchUniversity(authKey)
       .then(({ isError, message, data }) => {

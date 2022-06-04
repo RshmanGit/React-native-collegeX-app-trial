@@ -3,6 +3,8 @@ import UniversityDetails from '../../components/UniversityDetails';
 import { useState } from 'react';
 import constants from '../../constants';
 
+// shows university details
+// it also handle applying to university 
 export default function UniversityDetailsPage({ id, authKey, route, navigation }) {
   const toast = useToast();
   const { data } = route.params;
@@ -39,7 +41,7 @@ export default function UniversityDetailsPage({ id, authKey, route, navigation }
 
       <UniversityDetails data={data} />
       <VStack space={2} pt={4}>
-        <Button onPress={() => { setShowModal(true); console.log(data) }}>Apply</Button>
+        <Button onPress={() => setShowModal(true)}>Apply</Button>
         <Button onPress={navigation.goBack}>GO Back</Button>
       </VStack>
       <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
@@ -80,7 +82,9 @@ export default function UniversityDetailsPage({ id, authKey, route, navigation }
   )
 }
 
-
+// Handles student applying to university
+// payload shall contains - { universityId, studentId, type=target|reach|safety }
+// returns - {isError, message, data?}
 async function postOpting(authKey, payload) {
   try {
     const res = await fetch(`${constants.BACKEND_URL}/student/addOption/`, {
@@ -92,9 +96,7 @@ async function postOpting(authKey, payload) {
       },
     });
 
-    console.log({ status: res.status, headers: res.headers });
     const json = await res.json();
-    console.log(json)
     if (!res.ok) {
       return {
         isError: true,

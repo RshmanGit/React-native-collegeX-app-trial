@@ -1,10 +1,14 @@
 import { Avatar, Flex, Text, Box, Button, VStack } from 'native-base';
 
+// here the data is university Details
 export default function UniversityDetails({ data }) {
   return (
     <Box _text={{ color: 'black' }} >
       <VStack space={4}>
         <Flex maxW='100%' direction='row' alignItems='center'>
+          {/* I am assuming the avatar is like this. 
+              if this is the case no worries. 
+              Otherwise just change to the proper url */}
           <Avatar size='lg' mr={8} source={{ url: data.avatar }}>P</Avatar>
           <Text fontSize='lg'>{data.name}</Text>
         </Flex>
