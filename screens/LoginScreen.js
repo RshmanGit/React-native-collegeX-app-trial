@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import {
   Box,
   Button,
@@ -10,18 +9,18 @@ import {
   Link,
   Text,
   VStack,
+  useToast
 } from 'native-base';
 import React from 'react';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 import constants from '../constants'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-function signInStudent(values, setIsLoggedIn, setAuthKey, setId) {
+// input - { email, password }
+// output - { isError, data(on sucess), message }
+async function signInStudent(values) {
   var myHeaders = new Headers();
-  myHeaders.append(
-    'Authorization',
-    'Bearer 82dbc427-8ece-4575-9148-9b39eb64aa2b',
-  );
   myHeaders.append('Content-Type', 'application/json');
 
   var raw = JSON.stringify({
@@ -36,30 +35,72 @@ function signInStudent(values, setIsLoggedIn, setAuthKey, setId) {
     redirect: 'follow',
   };
 
-  fetch(
-    `${constants.BACKEND_URL}/student/signin/`,
-    requestOptions,
-  )
-    .then(response => response.json())
-    .then(result => {
-      console.log(result);
-      const { authKey, id } = result.data;
-      setId(id)
-      setAuthKey(authKey)
-    })
-    .then(() => setIsLoggedIn(true))
-    .catch(error => console.log('error', error));
+  try {
+    const res = await fetch(
+      `${constants.BACKEND_URL}/student/signin/`,
+      requestOptions,
+    );
+
+    console.log({ ok: res.ok, status: res.status });
+    const result = await res.json();
+    if (!res.ok) {
+      return {
+        isError: true,
+        message: result.error,
+      }
+    }
+
+    // successfull login..
+    const { id, authKey } = result.data;
+    try {
+      const creds = JSON.stringify({ id, authKey });
+      await AsyncStorage.setItem('@collegex_credentials', creds);
+    } catch (e) {
+      console.log('failed to store credentials. You can use the app, But on subsequent login you might need to relogin');
+      return {
+        isError: true,
+        message: 'Failed to save credentials'
+      }
+    }
+
+    return {
+      isError: false,
+      message: result.message,
+      data: result.data
+    };
+  } catch (err) {
+    return {
+      isError: true,
+      message: 'Failed to login'
+    }
+  }
 }
 
-
 // create a component
-export default function LoginScreen({ setIsLoggedIn, setHasAccount, setId, setAuthKey }) {
-  const handleSignUp = () => {
-    setHasAccount(false);
-  };
-  const handleSubmit = values => {
-    // setIsLoggedIn(true);
-    signInStudent(values, setIsLoggedIn, setAuthKey, setId);
+export default function LoginScreen({ setId, setAuthKey, navigation }) {
+  const toast = useToast();
+
+  // handle login calls the signInStudent internally 
+  const handleSubmit = async (values) => {
+    const { data, isError, message } = await signInStudent(values);
+    
+    if (!isError) {
+      // Login success
+      const { authKey, id } = data;
+      setId(id);
+      setAuthKey(authKey);
+
+      // navigate to dashboard
+      navigation.navigate('Dashboard');
+    }
+    // else failed to login
+
+    // show toast for feedback
+    toast.show({
+      render() {
+        return <Box px="2" py="1" rounded="sm" mb={5} bgColor={isError ? 'red.600' : 'green.600'} _text={{ color: 'white' }}>{message}</Box>
+      }
+    })
   };
   return (
     <Formik
@@ -77,7 +118,7 @@ export default function LoginScreen({ setIsLoggedIn, setHasAccount, setId, setAu
           .required(),
       })}>
       {({ values, handleChange, errors, setFieldTouched, touched, isValid }) => (
-        <Box bgColor={'#009be5'} py={'35%'}>
+        <Box bgColor={'#009be5'} py={'40%'}>
           <Center w="100%">
             <Box safeArea p="2" py="8" w="90%" maxW="290">
               <Heading
@@ -139,7 +180,7 @@ export default function LoginScreen({ setIsLoggedIn, setHasAccount, setId, setAu
                     }}
                     alignSelf="flex-end"
                     mt="1">
-                    <Text style={{ color: 'white' }}>Forget Password?</Text>
+                    <Text onPress={() => navigation.navigate('ForgetPasswordScreen')} style={{ color: 'white' }}>Forget Password?</Text>
                   </Link>
                 </FormControl>
                 <Button
@@ -158,14 +199,13 @@ export default function LoginScreen({ setIsLoggedIn, setHasAccount, setId, setAu
                       fontWeight: 'medium',
                       fontSize: 'sm',
                     }}
-                    onPress={handleSignUp}>
+                    onPress={() => navigation.navigate('SignUpScreen')}>
                     <Text style={{ color: 'white' }}> Sign Up</Text>
                   </Link>
                 </HStack>
               </VStack>
             </Box>
           </Center>
-          <Text> </Text>
         </Box>
       )}
     </Formik>

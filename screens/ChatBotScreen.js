@@ -1,6 +1,8 @@
-/* eslint-disable react-native/no-inline-styles */
+// Removed the commented code.. which is not working
+
+// /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {View, Text} from 'react-native';
+import { View, Text } from 'react-native';
 
 // create a component
 export default function ChatBotScreen() {
