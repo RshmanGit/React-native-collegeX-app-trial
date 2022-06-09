@@ -1,12 +1,12 @@
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 
-import HomeScreen from './screens/HomeScreen';
-import OptedScreen from './screens/OptedScreen';
-// import ChatBotScreen from './screens/ChatBotScreen';
-import ProfileScreen from './screens/ProfileScreen/StackNavigator';
-// import SettingsScreen from './screens/SettingsScreen';
+import HomeScreen from './HomeScreen';
+import OptedScreen from './OptedScreen';
+// import ChatBotScreen from './ChatBotScreen';
+import ProfileScreen from './ProfileScreen/StackNavigator';
+// import SettingsScreen from './SettingsScreen';
 // import SplashScreen from 'react-native-splash-screen';
-import CollegeExplore from './screens/CollegeExplore';
+import CollegeExplore from './CollegeExplore';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Tab = createMaterialBottomTabNavigator();

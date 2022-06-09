@@ -1,5 +1,5 @@
 import { Calendar } from 'react-native-calendars';
-
+import{Box} from 'native-base';
 export default function CalenderComp ({
   keyDates,
   setActiveDate,

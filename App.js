@@ -8,6 +8,11 @@ import LoginScreen from './screens/LoginScreen';
 import ForgetPasswordScreen from './screens/ForgetPasswordScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DashboardNavigator from './screens/DashboardNavigator';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+// createMaterialBottomTabNavigator(
+//   RouteConfigs,
+//   MaterialBottomTabNavigatorConfig
+// );
 
 // create a component
 // For splash screen, there are many changes done inside the android folder.
@@ -85,7 +90,7 @@ const App = () => {
   const [authKey, setAuthKey] = useState('');
 
   // well.. logs out the user
-  const logout = async () => {
+  const logout = async (navigation) => {
     try {
       await AsyncStorage.removeItem('@collegex_credentials');
     } catch (error) {
@@ -93,8 +98,9 @@ const App = () => {
     }
 
     setId(null);
-    setAuthKey('');
-    navigator.navigate('LoginScreen');
+    setAuthKey('');    
+    navigation.navigate('LoginScreen');
+    // navigator.navigate('LoginScreen');
   }
 
   // check if admin key and id exists in asyncstorage..
@@ -150,7 +156,7 @@ const App = () => {
             {props => <ForgetPasswordScreen {...props} />}
           </LoginStack.Screen>
           <LoginStack.Screen name='Dashboard'>
-            {props => <DashboardNavigator id={id} authKey={authKey} logout={logout} {...props} />}
+            {props => <DashboardNavigator id={id} authKey={authKey} logout={()=>logout(props.navigation)} {...props} />}
           </LoginStack.Screen>
         </LoginStack.Navigator>
       </NavigationContainer>
