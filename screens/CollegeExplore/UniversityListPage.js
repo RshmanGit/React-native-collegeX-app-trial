@@ -1,13 +1,14 @@
 import { Box, Flex, HStack, Input, ScrollView, Text, useToast, View, VStack } from "native-base";
 import UniversityCard from "../../components/UniversityCard";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import constants from '../../constants'
 
 export default function UniversityList({ authKey, universityList, navigation }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [displayResult, setDisplayResult] = useState(universityList)
   const toast = useToast();
+  const searchRef=useRef("");
 
   // why not search in the all universities?
   // because.. if pagination is implemented then "all universities in state" != "all universities"
@@ -17,8 +18,17 @@ export default function UniversityList({ authKey, universityList, navigation }) 
     setDisplayResult(universityList)
   }, [universityList])
 
-  const handleSearch = () => {
-    fetchSearchedUniversity(authKey, searchTerm)
+  //function for handle input and calling the debounce function
+  const handleSearchTermChange=(event)=>{    
+    const input=event;    
+    setSearchTerm(input);
+    searchRef.current=input;
+    BetterFunction();
+  }
+
+  //function for API call
+  const  handleAPICall= () => {
+    fetchSearchedUniversity(authKey, searchRef.current)
       .then(({ isError, message, data }) => {
         if (!isError) {
           setDisplayResult(data);
@@ -34,12 +44,24 @@ export default function UniversityList({ authKey, universityList, navigation }) 
       })
   }
 
+  const myDeBounce = (fn, delay) => {
+    let timer;
+    return () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        fn();
+      }, delay);
+    };
+  };
+
+  const BetterFunction = useCallback(myDeBounce(() => handleAPICall(), 500), []);
+
   return (
     <Flex py={8} px={5} flex={1} background="white">
       <Box py={4}>
         <HStack justifyContent='center' alignItems='center' space={4}>
-          <Input placeholder='Search' flex={1} onChangeText={val => setSearchTerm(val)} />
-          <Icon size={25} name="magnify" onPress={handleSearch}></Icon>
+          <Input placeholder='Search' flex={1} value={searchTerm} onChangeText={handleSearchTermChange} />
+          <Icon size={25} name="magnify" onPress={handleAPICall}></Icon>
         </HStack>
       </Box>
       <ScrollView>
