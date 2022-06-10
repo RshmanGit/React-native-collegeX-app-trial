@@ -129,17 +129,6 @@ const App = () => {
     }
   }
 
-  useEffect(() => {
-    handleLogin()
-      .then(({ isError, authKey, id }) => {
-        if (!isError) {
-          setId(id);
-          setAuthKey(authKey);
-          navigator.navigate('Dashboard');
-        }
-      })
-  }, [])
-
   return (
     <NativeBaseProvider>
       <NavigationContainer>
@@ -147,7 +136,7 @@ const App = () => {
         <LoginStack.Navigator screenOptions={{ header: () => null }}>
           <LoginStack.Screen name='SignUpScreen'>
             {/* here we need to pass a function which will be called on the SignupScreen render */}
-            {(props) => <SignUpScreen {...props} />}
+            {(props) => <SignUpScreen setId={setId} setAuthKey={setAuthKey} handleLogin={handleLogin} {...props} />}
           </LoginStack.Screen>
           <LoginStack.Screen name='LoginScreen'>
             {props => <LoginScreen setId={setId} setAuthKey={setAuthKey}  {...props} />}
