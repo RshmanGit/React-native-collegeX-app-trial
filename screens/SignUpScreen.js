@@ -10,7 +10,7 @@ import {
   Link,
   VStack,
 } from 'native-base';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Text } from 'react-native';
 import { Formik } from 'formik';
 import * as yup from 'yup';
@@ -65,7 +65,7 @@ async function signUpStudent(values) {
 
 // Gets all the stackNavigator props 
 // Only needed the navigation prop for navigating other screens
-const SignUpScreen = ({ navigation }) => {
+const SignUpScreen = ({ navigation, handleLogin, setId, setAuthKey }) => {
   const toast = useToast();
   const handleSubmit = async (values) => {
     const { isError, message } = await signUpStudent(values);
@@ -82,6 +82,18 @@ const SignUpScreen = ({ navigation }) => {
     
     navigation.navigate('LoginScreen');
   }
+
+  useEffect(() => {
+    console.log('in signup screen');
+    handleLogin()
+      .then(({ isError, authKey, id }) => {
+        if (!isError) {
+          setId(id);
+          setAuthKey(authKey);
+          navigation.navigate('Dashboard');
+        }
+      })
+  }, [])
 
   return (
     <Formik
