@@ -9,6 +9,7 @@ import ForgetPasswordScreen from './screens/ForgetPasswordScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DashboardNavigator from './screens/DashboardNavigator';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+
 // createMaterialBottomTabNavigator(
 //   RouteConfigs,
 //   MaterialBottomTabNavigatorConfig
@@ -152,5 +153,4 @@ const App = () => {
     </NativeBaseProvider>
   );
 };
-
 export default App;

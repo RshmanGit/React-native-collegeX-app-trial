@@ -2,7 +2,7 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 
 import HomeScreen from './HomeScreen';
 import OptedScreen from './OptedScreen';
-// import ChatBotScreen from './ChatBotScreen';
+import ChatBotScreen from './ChatBotScreen';
 import ProfileScreen from './ProfileScreen/StackNavigator';
 // import SettingsScreen from './SettingsScreen';
 // import SplashScreen from 'react-native-splash-screen';
@@ -38,15 +38,6 @@ export default function DashboardNavigator({ authKey, id, logout }) {
       </Tab.Screen>
 
       <Tab.Screen
-        name="CollegeBrowse"
-        options={{
-          tabBarLabel: 'Browse College',
-          tabBarIcon: () => <Icon name="earth" size={25} color="white" />,
-        }}>
-        {props => <CollegeExplore {...props} id={id} authKey={authKey} />}
-      </Tab.Screen>
-
-      {/* <Tab.Screen
         name="ChatBot"
         options={{
           tabBarLabel: 'Chatbot',
@@ -55,7 +46,16 @@ export default function DashboardNavigator({ authKey, id, logout }) {
           ),
         }}>
         {props => <ChatBotScreen {...props} authKey={authKey} id={id} />}
-      </Tab.Screen> */}
+      </Tab.Screen>
+
+      <Tab.Screen
+        name="CollegeBrowse"
+        options={{
+          tabBarLabel: 'Browse College',
+          tabBarIcon: () => <Icon name="earth" size={25} color="white" />,
+        }}>
+        {props => <CollegeExplore {...props} id={id} authKey={authKey} />}
+      </Tab.Screen>
 
       <Tab.Screen
         name="Profile"
