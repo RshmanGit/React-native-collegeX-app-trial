@@ -27,7 +27,7 @@ export default function EditProfile({ id, authKey, info, setInfo, navigation }) 
     // formik passes the values prop
     onSubmit(values) {
       const json = JSON.stringify(values);
-      
+
       // Student Detail PATCH request happens here!
       fetch(`${constants.BACKEND_URL}student/${id}`, {
         method: 'PATCH',
@@ -47,6 +47,7 @@ export default function EditProfile({ id, authKey, info, setInfo, navigation }) 
         .then(response => {
           console.log({ response })
           setInfo(response.data);
+
           toast.show({
             render: () => (
               <Box bg="green.200" px="2" py="1" rounded="sm" mb={5}>
@@ -54,6 +55,9 @@ export default function EditProfile({ id, authKey, info, setInfo, navigation }) 
               </Box>
             ),
           });
+          //navigate user to Profile
+          navigation.goBack();
+
         })
         .catch(err => {
           console.error({ err });
@@ -72,7 +76,7 @@ export default function EditProfile({ id, authKey, info, setInfo, navigation }) 
   return (
     <Flex flex={1} bg="white" p={12}>
       <Heading pb={12}>Edit Profile</Heading>
-      
+
       <FormControl>
         <Stack space={4}>
           <Stack>

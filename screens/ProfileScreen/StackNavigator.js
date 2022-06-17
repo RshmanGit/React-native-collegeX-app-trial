@@ -37,13 +37,21 @@ export default function ProfileScreen({ id, authKey, logout }) {
   }, []);
 
   return (
+    // <Stack.Navigator initialRouteName='Show Profile' screenOptions={{ header: () => null }}>
+    //   <Stack.Screen name="Show Profile">
+    //     {(props) => <Profile info={info} navigation={navigation} logout={logout} {...props} />}
+    //   </Stack.Screen>
+    //   <Stack.Screen name='Edit Profile'>
+    //     {(props) => <EditProfile authKey={authKey} id={id} info={info} setInfo={setInfo} navigation={navigation} {...props} />}
+    //   </Stack.Screen>
+    // </Stack.Navigator>
     <Stack.Navigator initialRouteName='Show Profile' screenOptions={{ header: () => null }}>
-      <Stack.Screen name="Show Profile">
-        {(props) => <Profile info={info} navigation={navigation} logout={logout} {...props} />}
-      </Stack.Screen>
-      <Stack.Screen name='Edit Profile'>
-        {(props) => <EditProfile authKey={authKey} id={id} info={info} setInfo={setInfo} navigation={navigation} {...props} />}
-      </Stack.Screen>
-    </Stack.Navigator>
+       <Stack.Screen name="Show Profile">
+          {(props) => <Profile info={info} logout={logout} {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name='Edit Profile'>
+          {(props) => <EditProfile authKey={authKey} id={id} info={info} setInfo={setInfo} {...props} />}
+        </Stack.Screen>
+      </Stack.Navigator>
   );
 }

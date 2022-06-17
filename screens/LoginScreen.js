@@ -79,11 +79,24 @@ async function signInStudent(values) {
 // create a component
 export default function LoginScreen({ setId, setAuthKey, navigation }) {
   const toast = useToast();
+  const id = "test-toast";
 
   // handle login calls the signInStudent internally 
   const handleSubmit = async (values) => {
+    if (values.email === "" || values.password === "") {
+      console.log("not calling server");
+      if (!toast.isActive(id)) {
+        toast.show({
+          id,
+          render() {
+            return <Box px="2" py="1" rounded="sm" mb={5} bgColor={'red.600'} _text={{ color: 'white' }}>Enter Email and Password</Box>
+          }
+        })
+      }
+      return;
+    }
     const { data, isError, message } = await signInStudent(values);
-    
+
     if (!isError) {
       // Login success
       const { authKey, id } = data;
@@ -96,11 +109,15 @@ export default function LoginScreen({ setId, setAuthKey, navigation }) {
     // else failed to login
 
     // show toast for feedback
-    toast.show({
-      render() {
-        return <Box px="2" py="1" rounded="sm" mb={5} bgColor={isError ? 'red.600' : 'green.600'} _text={{ color: 'white' }}>{message}</Box>
-      }
-    })
+    if (!toast.isActive(id)) {
+      toast.show({
+        id,
+        render() {
+          return <Box px="2" py="1" rounded="sm" mb={5} bgColor={isError ? 'red.600' : 'green.600'} _text={{ color: 'white' }}>{message}</Box>
+        }
+      })
+      return;
+    }
   };
   return (
     <Formik
@@ -147,7 +164,7 @@ export default function LoginScreen({ setId, setAuthKey, navigation }) {
                     onChangeText={handleChange('email')}
                     onBlur={() => setFieldTouched('email')}
                   />
-                  {touched.email && errors.email && (
+                  {(touched.email || errors.email) && (
                     <Text style={{ fontSize: 12, color: '#FFf' }}>
                       {errors.email}
                     </Text>
@@ -167,7 +184,7 @@ export default function LoginScreen({ setId, setAuthKey, navigation }) {
                     onBlur={() => setFieldTouched('password')}
                     secureTextEntry={true}
                   />
-                  {touched.password && errors.password && (
+                  {(touched.password || errors.password) && (
                     <Text style={{ fontSize: 12, color: '#FFf' }}>
                       {errors.password}
                     </Text>
@@ -186,7 +203,12 @@ export default function LoginScreen({ setId, setAuthKey, navigation }) {
                 <Button
                   mt="2"
                   bg={'white'}
-                  onPress={() => handleSubmit(values)}>
+                  onPress={() => {
+                    if (!errors.email || !errors.password) {
+                      handleSubmit(values)
+                    }
+                  }
+                  }>
                   <Text style={{ color: '#009be5' }}>Sign in</Text>
                 </Button>
                 <HStack mt="6" justifyContent="center">
